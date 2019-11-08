@@ -3,7 +3,7 @@
     <nav class="console__nav">
       <ul class="nav-wrapper">
         <li v-if="!isLoggedIn" class="nav-item">
-          <a class="auth-button" @click.prevent="performWavesKeeperLogin"
+          <a class="primary-button" @click.prevent="performWavesKeeperLogin"
             ><span v-if="loginState === 'NOT_LOGGED_IN'">SIGN IN</span>
             <span v-if="loginState === 'LOGGING_IN'">SIGNING IN...</span>
             <span v-if="loginState === 'LOG_IN_ERROR'">FAILED! TRY AGAIN</span>
@@ -21,7 +21,7 @@
       <ul class="sidebar-nav">
         <li>
           <nuxt-link to="/console">
-            Overview
+            <i class="material-icons">extension</i><span>Overview</span>
           </nuxt-link>
         </li>
         <li>
@@ -47,6 +47,61 @@
       :actions="fabActions"
       @birthRecord="openAddRecordModal"
     />
+    <modal
+      name="addNewRecordModal"
+      :adaptive="true"
+      :draggable="true"
+      :scrollable="true"
+      height="auto"
+    >
+      <form class="add-new-record-form" @submit.enter.prevent="addNewRecord">
+        <div class="form-group">
+          <input v-model="name" type="text" placeholder="Full name" />
+        </div>
+        <div class="form-group">
+          <input
+            v-model="dateOfBirth"
+            type="text"
+            placeholder="Date of birth e.g DD/MM/YYYY"
+          />
+        </div>
+        <div class="form-group">
+          <input
+            v-model="lga"
+            type="text"
+            placeholder="Local Government Area"
+          />
+        </div>
+        <div class="form-group">
+          <div class="radio">
+            <input
+              id="male"
+              v-model="sex"
+              type="radio"
+              value="male"
+              name="sex"
+            />
+            <label for="male">Male</label>
+            <div class="check"><div class="inside"></div></div>
+          </div>
+          <div class="radio">
+            <input
+              id="female"
+              v-model="sex"
+              type="radio"
+              value="female"
+              name="sex"
+            />
+            <label for="female">Female</label>
+            <div class="check"><div class="inside"></div></div>
+          </div>
+        </div>
+        <button type="submit" class="primary-button" :disabled="isAddingRecord">
+          <i v-if="isAddingRecord" class="material-icons">watch_later</i>
+          <i v-else class="material-icons">add_circle</i>
+        </button>
+      </form>
+    </modal>
   </div>
 </template>
 <script>
@@ -68,7 +123,12 @@ export default {
           icon: 'perm_identity',
           tooltip: 'Add birth record'
         }
-      ]
+      ],
+      name: '',
+      dateOfBirth: '',
+      sex: '',
+      lga: '',
+      isAddingRecord: false
     }
   },
   computed: {
@@ -77,7 +137,8 @@ export default {
       'isLoggedIn',
       'userStatus',
       'loginState',
-      'showSignInSnackbar'
+      'showSignInSnackbar',
+      'dAppAddress'
     ]),
     canAddRecord() {
       let bool = false
@@ -113,7 +174,66 @@ export default {
   methods: {
     ...mapActions(['performWavesKeeperLogin', 'logOut']),
     openAddRecordModal() {
-      console.log('Opening modal')
+      this.isAddingRecord = false
+      this.$modal.show('addNewRecordModal')
+    },
+    addNewRecord() {
+      this.isAddingRecord = true
+      this.$snack.success({
+        text: 'Adding new record to Waves Blockchain'
+      })
+      const info = {
+        name: this.name,
+        sex: this.sex,
+        dateOfBirth: this.dateOfBirth,
+        lga: this.lga
+      }
+
+      console.log(info)
+      // eslint-disable-next-line no-unreachable
+      const payload = JSON.stringify(info)
+      const tx = {
+        type: 16,
+        data: {
+          dApp: this.dAppAddress,
+          call: {
+            function: 'addBirthRecord',
+            args: [{ type: 'string', value: payload }]
+          },
+          payment: [],
+          fee: {
+            assetId: 'WAVES',
+            amount: '500000'
+          }
+        }
+      }
+
+      try {
+        // eslint-disable-next-line no-undef
+        WavesKeeper.signAndPublishTransaction(tx)
+          .then((data) => {
+            this.isAddingRecord = false
+            this.$modal.hide('addNewRecordModal')
+            this.$snack.success({
+              text: '👍 Record added successfully'
+            })
+          })
+          .catch((error) => {
+            console.log(error)
+            this.$snack.success({
+              text:
+                '😰 Oops this is embarrasing something went wrong. Try again'
+            })
+
+            this.isAddingRecord = false
+          })
+      } catch (_) {
+        this.isAddingRecord = false
+
+        this.$snack.success({
+          text: '😰 Oops this is embarrasing something went wrong. Try again'
+        })
+      }
     }
   }
 }
@@ -170,14 +290,18 @@ nav {
 }
 
 .sidebar-nav li {
-  margin-top: 2em;
   margin-bottom: 2em;
 }
+
 .sidebar-nav a {
+  display: flex;
+  align-items: center;
   padding: 1em 2em;
   transition: border-left 500ms;
 }
-
+.sidebar-nav i {
+  margin-right: 0.2em;
+}
 .sidebar-nav a:hover {
   border-left: 5px solid var(--primary-color);
 }
@@ -215,7 +339,7 @@ nav {
   color: var(--secondary-color);
 }
 
-.auth-button {
+.primary-button {
   background-color: var(--secondary-color);
   color: var(--primary-color) !important;
   padding: 1em 4em;
@@ -228,10 +352,99 @@ nav {
   font-size: 11px;
 }
 
-.auth-button:hover {
+.primary-button:hover {
   background-color: var(--primary-color);
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
   color: var(--secondary-color) !important;
   transform: translateY(2px);
+}
+
+/* Form */
+.add-new-record-form {
+  padding: 2em;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-row-gap: 2em;
+}
+
+.add-new-record-form input[type='text'] {
+  width: 100%;
+  padding: 1em 2em;
+  font-size: 1em;
+  border-radius: 4px;
+  border: 1px solid var(--primary-color);
+}
+
+.add-new-record-form input[type='text']:focus {
+  outline: none;
+}
+
+.form-group {
+  display: flex;
+  justify-content: center;
+  justify-content: space-evenly;
+}
+.radio {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.radio input[type='radio'] {
+  visibility: hidden;
+}
+
+.radio label {
+  font-weight: 300;
+  font-size: 1.35em;
+  z-index: 9;
+  cursor: pointer;
+  transition: all 0.25s linear;
+  margin-left: 0.5rem;
+}
+
+.radio:hover label {
+  color: var(--primary-color);
+}
+
+.radio .check {
+  border: 5px solid var(--primary-color);
+  border-radius: 100%;
+  height: 25px;
+  width: 25px;
+  z-index: 5;
+  transition: border 0.25s linear;
+  -webkit-transition: border 0.25s linear;
+}
+
+.radio:hover .check {
+  border: 5px solid var(--primary-color);
+}
+
+.radio .check::before {
+  display: block;
+  content: '';
+  border-radius: 100%;
+  height: 15px;
+  width: 15px;
+  top: 5px;
+  left: 5px;
+  margin: auto;
+  transition: background 0.25s linear;
+  -webkit-transition: background 0.25s linear;
+}
+
+input[type='radio']:checked ~ .check {
+  border: 5px solid var(--primary-color);
+}
+
+input[type='radio']:checked ~ .check::before {
+  background: #9e3470;
+}
+
+input[type='radio']:checked ~ label {
+  color: var(--primary-color);
+}
+
+.v--modal-overlay {
+  background: rgba(0, 0, 0, 0.9) !important;
 }
 </style>

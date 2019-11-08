@@ -9,6 +9,7 @@
           class="main-card__search"
           name=""
           placeholder="Enter birth ID"
+          autofocus
         />
       </form>
     </div>
@@ -18,6 +19,7 @@
           <h1 class="name">{{ record.info.name | uppercase }}</h1>
           <p class="date-of-birth">{{ record.info.dateOfBirth }}</p>
           <p class="sex">{{ record.info.sex | uppercase }}</p>
+          <p class="lga">{{ record.info.lga | capitalize }}</p>
         </div>
         <footer class="record-footer">
           <p class="record-id">
@@ -37,8 +39,13 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   middleware: 'isAuthenticated',
+  data() {
+    return {
+      recordId: '7832447598423894957'
+    }
+  },
   computed: {
-    ...mapState(['recordId', 'recordFetchingState', 'record'])
+    ...mapState(['recordFetchingState', 'record'])
   },
   watch: {
     recordFetchingState(state) {

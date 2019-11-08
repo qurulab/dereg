@@ -9,7 +9,6 @@ export const state = () => ({
   dAppAddress: '3N8P9bdRz4kqwJr27kpdTpnXho5m4926LFP',
   isLoggedIn,
   userStatus,
-  recordId: '7832447598423894957',
   record: {
     id: '',
     info: {},

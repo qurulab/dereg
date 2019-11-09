@@ -20,18 +20,18 @@
       <div class="header"></div>
       <ul class="sidebar-nav">
         <li>
-          <nuxt-link to="/console">
-            <i class="material-icons">extension</i><span>Overview</span>
+          <nuxt-link to="/console/records">
+            <i class="material-icons">extension</i><span>Records</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/console/birth">
-            Birth
+            <i class="material-icons">how_to_reg</i><span>Birth</span>
           </nuxt-link>
         </li>
         <li v-if="isLoggedIn">
           <a href="#" @click="logOut">
-            Log out
+            <i class="material-icons">power_settings_new</i><span>Log out</span>
           </a>
         </li>
       </ul>

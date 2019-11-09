@@ -17,7 +17,8 @@ export const state = () => ({
   },
   recordFetchingState: 'IDLE',
   loginState: 'NOT_LOGGED_IN',
-  showSignInSnackbar: false
+  showSignInSnackbar: false,
+  records: []
 })
 
 export const mutations = {
@@ -49,6 +50,9 @@ export const mutations = {
   },
   SET_SHOW_SIGNIN_SNACKBAR(state) {
     state.showSignInSnackbar = true
+  },
+  SET_RECORDS(state, data) {
+    state.records = data // using spread operator
   }
 }
 
@@ -126,7 +130,6 @@ export const actions = {
       .then((data) => {
         const dataArray = data.value.split('_')
         const currentUserStatus = dataArray[1]
-        console.log(currentUserStatus)
         context.commit('SET_WHITE_LISTED', currentUserStatus)
         localStorage.setItem('userStatus', currentUserStatus)
       })
@@ -138,5 +141,33 @@ export const actions = {
   },
   showSignInSnackbar(context) {
     context.commit('SET_SHOW_SIGNIN_SNACKBAR')
+  },
+  getAllRecords(context) {
+    if (context.state.recordFetchingState === 'FETCHING') return
+
+    context.commit('RESET_RECORD_FETCHING_STATE')
+    context.commit('UPDATE_RECORD_FETCHING_STATE', 'FETCHING')
+
+    const regex = '^[0-9]*$'
+    return this.$axios
+      .$get(
+        `https://nodes-testnet.wavesnodes.com/addresses/data/${context.state.dAppAddress}?matches=${regex}`
+      )
+      .then((data) => {
+        const records = data.map((datum) => {
+          const dataArray = datum.value.split('_')
+          return {
+            id: datum.key,
+            info: JSON.parse(dataArray[0]),
+            issuer: dataArray[1],
+            status: dataArray[2]
+          }
+        })
+        context.commit('SET_RECORDS', records)
+        context.commit('UPDATE_RECORD_FETCHING_STATE', 'SUCCESS')
+      })
+      .catch((_) => {
+        context.commit('UPDATE_RECORD_FETCHING_STATE', 'ERROR')
+      })
   }
 }

@@ -24,6 +24,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^3.0.0-0",
     "nuxt": "^2.0.0",
+    "vue-clipboard2": "^0.3.1",
     "vue-fab": "^2.3.1",
     "vue-js-modal": "^1.3.31",
     "vue-snack": "^0.1.4",

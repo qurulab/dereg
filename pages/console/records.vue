@@ -19,14 +19,15 @@
             :href="
               `https://wavesexplorer.com/testnet/tx/${record.transactionId}`
             "
-            >{{ record.id | truncate(5) }}</a
+            >{{ record.id }}</a
           >
+          <button class="copy-button" @click="copyId(record.id)">copy</button>
         </td>
-        <td>{{ record.info.name }}</td>
-        <td>{{ record.info.sex | lowercase }}</td>
+        <td>{{ record.info.name | capitalize }}</td>
+        <td>{{ record.info.sex | capitalize }}</td>
         <td>{{ record.info.dateOfBirth }}</td>
-        <td>{{ record.info.lga }}</td>
-        <td>{{ record.status }}</td>
+        <td>{{ record.info.lga | capitalize }}</td>
+        <td>{{ record.status | capitalize }}</td>
       </tr>
     </tbody>
   </table>
@@ -35,13 +36,21 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-  props: {
-    isWhitelisted: {
-      type: Function
-    }
-  },
   computed: {
-    ...mapState(['records', 'recordFetchingState'])
+    ...mapState(['records', 'recordFetchingState', 'userStatus']),
+    isWhitelisted() {
+      let bool = false
+      switch (this.userStatus) {
+        case 'whitelisted':
+          bool = true
+          break
+        case 'blacklisted':
+        case 'notlisted':
+          bool = false
+          break
+      }
+      return bool
+    }
   },
   watch: {
     recordFetchingState(newValue, oldValue) {
@@ -57,7 +66,7 @@ export default {
           })
           break
         case 'ERROR':
-          this.$snack.error({
+          this.$snack.success({
             text: 'Oops! Could not retrieve records at this time'
           })
           break
@@ -65,7 +74,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAllRecords'])
+    ...mapActions(['getAllRecords']),
+    copyId(id) {
+      this.$copyText(id)
+        .then(() => {
+          this.$snack.success(`Copied ${id}!`)
+        })
+        .catch((_) => {
+          this.$snack.success('Could not copy')
+        })
+    }
   },
   mounted() {
     this.getAllRecords()
@@ -92,9 +110,9 @@ export default {
   font-weight: normal;
   -webkit-font-smoothing: antialiased;
   padding: 1em;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgb(172, 166, 166);
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
-  font-size: 1.5em;
+  font-size: 1em;
   text-align: left;
 }
 .flat-table td {
@@ -102,6 +120,7 @@ export default {
   padding: 0.7em 1em 0.7em 1.15em;
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
   font-size: 1.2em;
+  cursor: pointer;
 }
 .flat-table tr {
   -webkit-transition: background 0.3s, box-shadow 0.3s;
@@ -125,5 +144,10 @@ export default {
 }
 .flat-table-3 tr:hover {
   background: rgba(0, 0, 0, 0.1);
+}
+
+.copy-button {
+  background-color: #fff;
+  border-radius: 4px;
 }
 </style>

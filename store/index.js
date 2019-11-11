@@ -157,16 +157,22 @@ export const actions = {
         `https://nodes-testnet.wavesnodes.com/addresses/data/${context.state.dAppAddress}?matches=${regex}`
       )
       .then((data) => {
-        const records = data.map((datum) => {
-          const dataArray = datum.value.split('_')
-          return {
-            id: datum.key,
-            info: JSON.parse(dataArray[0]),
-            issuer: dataArray[1],
-            transactionId: dataArray[2],
-            status: dataArray[3]
-          }
-        })
+        const records = data
+          .map((datum) => {
+            const dataArray = datum.value.split('_')
+            return {
+              id: datum.key,
+              info: JSON.parse(dataArray[0]),
+              issuer: dataArray[1],
+              transactionId: dataArray[2],
+              status: dataArray[3]
+            }
+          })
+          .filter(
+            (record) =>
+              record.issuer === context.state.wavesKeeperData.publicKey
+          )
+
         context.commit('SET_RECORDS', records)
         context.commit('UPDATE_RECORD_FETCHING_STATE', 'SUCCESS')
       })

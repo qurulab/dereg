@@ -14,7 +14,10 @@
       </form>
     </div>
     <transition name="certificate">
-      <div v-if="recordFetchingState === 'SUCCESS'" class="main-card record">
+      <div
+        v-if="recordFetchingState === 'SUCCESS' && record.id"
+        class="main-card record"
+      >
         <div class="record-body">
           <h1 class="name">{{ record.info.name | uppercase }}</h1>
           <p class="date-of-birth">{{ record.info.dateOfBirth }}</p>
@@ -23,7 +26,16 @@
         </div>
         <footer class="record-footer">
           <p class="record-id">
-            ID: <span>{{ record.id }}</span>
+            ID:
+            <span
+              ><a
+                target="_blank"
+                :href="
+                  `https://wavesexplorer.com/testnet/tx/${record.transactionId}`
+                "
+                >{{ record.id }}</a
+              ></span
+            >
           </p>
           <p class="issuer">
             Issued By: <span>{{ record.issuer }}</span>
@@ -41,7 +53,7 @@ export default {
   middleware: 'isAuthenticated',
   data() {
     return {
-      recordId: '7832447598423894957'
+      recordId: ''
     }
   },
   computed: {

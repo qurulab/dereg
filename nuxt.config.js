@@ -42,7 +42,12 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/filters', '~/plugins/vueSnack', '~/plugins/vueJsModal'],
+  plugins: [
+    '~/plugins/filters',
+    '~/plugins/vueSnack',
+    '~/plugins/vueJsModal',
+    '~/plugins/vue2Clipboard'
+  ],
   /*
    ** Nuxt.js dev-modules
    */

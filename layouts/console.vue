@@ -37,7 +37,7 @@
       </ul>
     </aside>
     <main class="console__main">
-      <nuxt :isWhitelisted="isWhitelisted" />
+      <nuxt />
     </main>
     <footer class="console__footer"></footer>
     <fab
@@ -56,11 +56,14 @@
     >
       <form class="add-new-record-form" @submit.enter.prevent="addNewRecord">
         <div v-if="recordAdded" class="notification">
-          Record added successfully. ID
+          Record added with ID
           <a
             target="_blank"
-            :href="`https://wavesexplorer.com/testnet/tx/${transaction.id}`"
-            >{{ transaction.info.trace[0].key }}</a
+            class="notification__link"
+            :href="
+              `https://wavesexplorer.com/testnet/tx/${transaction.info.id}`
+            "
+            >{{ transaction.info.trace[0].result.data[0].key }}</a
           >
         </div>
         <div class="form-group">
@@ -160,7 +163,6 @@ export default {
           bool = false
           break
       }
-      console.log(bool)
       return bool
     }
   },
@@ -228,7 +230,6 @@ export default {
             })
             this.recordAdded = true
             const result = {
-              id: data.id,
               info: JSON.parse(data)
             }
             console.log(result.info)
@@ -470,5 +471,17 @@ input[type='radio']:checked ~ label {
   background-color: #4bb543;
   color: #fff;
   border-radius: 4px;
+}
+
+.notification__link {
+  text-decoration: none;
+  color: #292a2a !important;
+  transition: box-shadow 0.15s;
+  box-shadow: inset 0 -2px 0 0 var(--primary-color);
+  font-size: 1.2em;
+}
+
+.notification__link:hover {
+  box-shadow: inset 0 -2rem 0 0 var(--primary-color);
 }
 </style>

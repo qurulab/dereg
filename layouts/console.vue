@@ -37,11 +37,11 @@
       </ul>
     </aside>
     <main class="console__main">
-      <nuxt />
+      <nuxt :isWhitelisted="isWhitelisted" />
     </main>
     <footer class="console__footer"></footer>
     <fab
-      v-if="isLoggedIn && canAddRecord"
+      v-if="isLoggedIn && isWhitelisted"
       :position="position"
       :bg-color="bgColor"
       :actions="fabActions"
@@ -55,6 +55,14 @@
       height="auto"
     >
       <form class="add-new-record-form" @submit.enter.prevent="addNewRecord">
+        <div v-if="recordAdded" class="notification">
+          Record added successfully. ID
+          <a
+            target="_blank"
+            :href="`https://wavesexplorer.com/testnet/tx/${transaction.id}`"
+            >{{ transaction.info.trace[0].key }}</a
+          >
+        </div>
         <div class="form-group">
           <input v-model="name" type="text" placeholder="Full name" />
         </div>
@@ -128,7 +136,8 @@ export default {
       dateOfBirth: '',
       sex: '',
       lga: '',
-      isAddingRecord: false
+      isAddingRecord: false,
+      recordAdded: false
     }
   },
   computed: {
@@ -140,7 +149,7 @@ export default {
       'showSignInSnackbar',
       'dAppAddress'
     ]),
-    canAddRecord() {
+    isWhitelisted() {
       let bool = false
       switch (this.userStatus) {
         case 'whitelisted':
@@ -179,6 +188,7 @@ export default {
     },
     addNewRecord() {
       this.isAddingRecord = true
+      this.recordAdded = false
       this.$snack.success({
         text: 'Adding new record to Waves Blockchain'
       })
@@ -213,10 +223,16 @@ export default {
         WavesKeeper.signAndPublishTransaction(tx)
           .then((data) => {
             this.isAddingRecord = false
-            this.$modal.hide('addNewRecordModal')
             this.$snack.success({
               text: '👍 Record added successfully'
             })
+            this.recordAdded = true
+            const result = {
+              id: data.id,
+              info: JSON.parse(data)
+            }
+            console.log(result.info)
+            this.transaction = result
           })
           .catch((error) => {
             console.log(error)
@@ -226,10 +242,11 @@ export default {
             })
 
             this.isAddingRecord = false
+            this.recordAdded = false
           })
       } catch (_) {
         this.isAddingRecord = false
-
+        this.recordAdded = false
         this.$snack.success({
           text: '😰 Oops this is embarrasing something went wrong. Try again'
         })
@@ -446,5 +463,12 @@ input[type='radio']:checked ~ label {
 
 .v--modal-overlay {
   background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.notification {
+  padding: 1em 2em;
+  background-color: #4bb543;
+  color: #fff;
+  border-radius: 4px;
 }
 </style>

@@ -6,13 +6,14 @@ const isLoggedIn = localStorage.getItem('isLoggedIn') || false
 const userStatus = localStorage.getItem('userStatus') || 'notlisted'
 export const state = () => ({
   wavesKeeperData,
-  dAppAddress: '3N8P9bdRz4kqwJr27kpdTpnXho5m4926LFP',
+  dAppAddress: '3N5MerXBH5LejNxKNjAoJm4pS1TMNV3QAcP',
   isLoggedIn,
   userStatus,
   record: {
     id: '',
     info: {},
     issuer: '',
+    transactionId: '',
     status: ''
   },
   recordFetchingState: 'IDLE',
@@ -106,13 +107,15 @@ export const actions = {
         const dataArray = data.value.split('_')
         const info = JSON.parse(dataArray[0])
         const issuer = dataArray[1]
-        const status = dataArray[2]
+        const transactionId = dataArray[2]
+        const status = data[3]
         const id = data.key
 
         const payload = {
           id,
           info,
           issuer,
+          transactionId,
           status
         }
         context.commit('UPDATE_RECORD', payload)
@@ -160,7 +163,8 @@ export const actions = {
             id: datum.key,
             info: JSON.parse(dataArray[0]),
             issuer: dataArray[1],
-            status: dataArray[2]
+            transactionId: dataArray[2],
+            status: dataArray[3]
           }
         })
         context.commit('SET_RECORDS', records)

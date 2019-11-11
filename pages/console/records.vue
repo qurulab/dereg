@@ -1,6 +1,6 @@
 <template>
   <table
-    v-if="recordFetchingState === 'SUCCESS'"
+    v-if="recordFetchingState === 'SUCCESS' && isWhitelisted"
     class="flat-table flat-table-1"
   >
     <thead>
@@ -13,7 +13,15 @@
     </thead>
     <tbody>
       <tr v-for="record in records" :key="record.id">
-        <td>{{ record.id | truncate(5) }}</td>
+        <td>
+          <a
+            target="_blank"
+            :href="
+              `https://wavesexplorer.com/testnet/tx/${record.transactionId}`
+            "
+            >{{ record.id | truncate(5) }}</a
+          >
+        </td>
         <td>{{ record.info.name }}</td>
         <td>{{ record.info.sex | lowercase }}</td>
         <td>{{ record.info.dateOfBirth }}</td>
@@ -27,6 +35,11 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
+  props: {
+    isWhitelisted: {
+      type: Function
+    }
+  },
   computed: {
     ...mapState(['records', 'recordFetchingState'])
   },

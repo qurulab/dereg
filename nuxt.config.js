@@ -4,7 +4,8 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: 'dAfrica | Collection of dApps on the Waves Blockchain',
+    title:
+      'deREG | Open registry built on Waves Blockchain to manage birth, death and marriage records',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },

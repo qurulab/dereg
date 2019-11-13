@@ -1,18 +1,9 @@
 <template>
   <div>
-    <div class="main-card">
-      <form @submit.enter.prevent="searchForRecordById(recordId)">
-        <input
-          id="birthId"
-          v-model="recordId"
-          type="text"
-          class="main-card__search"
-          name=""
-          placeholder="Enter birth ID"
-          autofocus
-        />
-      </form>
-    </div>
+    <search-box
+      placeholder="Enter birth id"
+      @onSubmit="searchForRecordById(searchQuery)"
+    />
     <transition name="certificate">
       <div
         v-if="recordFetchingState === 'SUCCESS' && record.id"
@@ -122,12 +113,11 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-
+import SearchBox from '@/components/SearchBox.vue'
 export default {
   middleware: 'isAuthenticated',
   data() {
     return {
-      recordId: '',
       name: '',
       dateOfBirth: '',
       sex: '',
@@ -143,7 +133,8 @@ export default {
       'isLoggedIn',
       'userStatus',
       'wavesKeeperData',
-      'dAppAddress'
+      'dAppAddress',
+      'searchQuery'
     ]),
     isWhitelisted() {
       let bool = false
@@ -158,6 +149,9 @@ export default {
       }
       return bool
     }
+  },
+  components: {
+    SearchBox
   },
   watch: {
     recordFetchingState(state) {

@@ -13,13 +13,16 @@ export const state = () => ({
     id: '',
     info: {},
     issuer: '',
-    transactionId: '',
+    searchQuery: '',
     status: ''
   },
   recordFetchingState: 'IDLE',
+  recordsFetchingState: 'IDLE',
   loginState: 'NOT_LOGGED_IN',
   showSignInSnackbar: false,
-  records: []
+  records: [],
+  filteredRecords: [],
+  recordId: ''
 })
 
 export const mutations = {
@@ -40,11 +43,17 @@ export const mutations = {
   UPDATE_RECORD_FETCHING_STATE(state, status) {
     state.recordFetchingState = status
   },
+  UPDATE_RECORDS_FETCHING_STATE(state, status) {
+    state.recordsFetchingState = status
+  },
   UPDATE_LOGIN_STATE(state, status) {
     state.loginState = status
   },
   RESET_RECORD_FETCHING_STATE(state) {
     state.recordFetchingState = 'IDLE'
+  },
+  RESET_RECORDS_FETCHING_STATE(state) {
+    state.recordsFetchingState = 'IDLE'
   },
   RESET_LOGIN_STATE(state) {
     state.loginState = 'NOT_LOGGED_IN'
@@ -54,6 +63,12 @@ export const mutations = {
   },
   SET_RECORDS(state, data) {
     state.records = data // using spread operator
+  },
+  UPDATE_SEARCH_QUERY(state, data) {
+    state.searchQuery = data
+  },
+  SET_FILTERED_RECORDS(state, data) {
+    state.filteredRecords = data
   }
 }
 
@@ -146,10 +161,10 @@ export const actions = {
     context.commit('SET_SHOW_SIGNIN_SNACKBAR')
   },
   getAllRecords(context) {
-    if (context.state.recordFetchingState === 'FETCHING') return
+    if (context.state.recordsFetchingState === 'FETCHING') return
 
-    context.commit('RESET_RECORD_FETCHING_STATE')
-    context.commit('UPDATE_RECORD_FETCHING_STATE', 'FETCHING')
+    context.commit('RESET_RECORDS_FETCHING_STATE')
+    context.commit('UPDATE_RECORDS_FETCHING_STATE', 'FETCHING')
 
     const regex = '^[0-9]*$'
     return this.$axios
@@ -174,10 +189,25 @@ export const actions = {
           )
 
         context.commit('SET_RECORDS', records)
-        context.commit('UPDATE_RECORD_FETCHING_STATE', 'SUCCESS')
+        context.commit('SET_FILTERED_RECORDS', records)
+        context.commit('UPDATE_RECORDS_FETCHING_STATE', 'SUCCESS')
       })
       .catch((_) => {
-        context.commit('UPDATE_RECORD_FETCHING_STATE', 'ERROR')
+        context.commit('UPDATE_RECORDS_FETCHING_STATE', 'ERROR')
       })
+  },
+  filterRecords(context) {
+    const records = context.state.records.filter((record) => {
+      const regex = new RegExp(context.state.searchQuery, 'gi')
+      return (
+        record.id.match(regex) ||
+        record.transactionId.match(regex) ||
+        record.info.name.match(regex) ||
+        record.info.sex.startsWith(context.state.searchQuery) ||
+        record.info.lga.match(regex) ||
+        record.info.dateOfBirth.match(regex)
+      )
+    })
+    context.commit('SET_FILTERED_RECORDS', records)
   }
 }

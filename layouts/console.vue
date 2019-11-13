@@ -1,118 +1,139 @@
 <template>
-  <div class="console">
-    <nav class="console__nav">
-      <ul class="nav-wrapper">
-        <li v-if="!isLoggedIn" class="nav-item">
-          <a class="primary-button" @click.prevent="performWavesKeeperLogin"
-            ><span v-if="loginState === 'NOT_LOGGED_IN'">SIGN IN</span>
-            <span v-if="loginState === 'LOGGING_IN'">SIGNING IN...</span>
-            <span v-if="loginState === 'LOG_IN_ERROR'">FAILED! TRY AGAIN</span>
-          </a>
-        </li>
-        <li v-if="isLoggedIn" class="nav-item">
-          <a href="#" class="logged-in" @click.prevent="toggleDropdown"
-            >{{ wavesKeeperData.address | truncate(15) }} <avatar
-          /></a>
-        </li>
-      </ul>
-    </nav>
-    <aside class="console__sidebar">
-      <div class="header"></div>
-      <ul class="sidebar-nav">
-        <li>
-          <nuxt-link to="/console/records">
-            <i class="material-icons">extension</i><span>Records</span>
-          </nuxt-link>
-        </li>
-        <li>
-          <nuxt-link to="/console/birth">
-            <i class="material-icons">how_to_reg</i><span>Birth</span>
-          </nuxt-link>
-        </li>
-        <li v-if="isLoggedIn">
-          <a href="#" @click="logOut">
-            <i class="material-icons">power_settings_new</i><span>Log out</span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-    <main class="console__main">
-      <nuxt />
-    </main>
-    <footer class="console__footer"></footer>
-    <fab
-      v-if="isLoggedIn && isWhitelisted"
-      :position="position"
-      :bg-color="bgColor"
-      :actions="fabActions"
-      @birthRecord="openAddRecordModal"
-    />
-    <modal
-      name="addNewRecordModal"
-      :adaptive="true"
-      :draggable="true"
-      :scrollable="true"
-      height="auto"
-    >
-      <form class="add-new-record-form" @submit.enter.prevent="addNewRecord">
-        <div v-if="recordAdded" class="notification">
-          Record added with ID
-          <a
-            target="_blank"
-            class="notification__link"
-            :href="
-              `https://wavesexplorer.com/testnet/tx/${transaction.info.id}`
-            "
-            >{{ transaction.info.trace[0].result.data[0].key }}</a
+  <div>
+    <div v-if="!getIsMobileStatus()" class="console">
+      <nav class="console__nav">
+        <ul class="nav-wrapper">
+          <li v-if="!isLoggedIn" class="nav-item">
+            <a class="primary-button" @click.prevent="performWavesKeeperLogin"
+              ><span v-if="loginState === 'NOT_LOGGED_IN'">SIGN IN</span>
+              <span v-if="loginState === 'LOGGING_IN'">SIGNING IN...</span>
+              <span v-if="loginState === 'LOG_IN_ERROR'"
+                >FAILED! TRY AGAIN</span
+              >
+            </a>
+          </li>
+          <li v-if="isLoggedIn" class="nav-item">
+            <a href="#" class="logged-in" @click.prevent="toggleDropdown"
+              >{{ wavesKeeperData.address | truncate(15) }} <avatar
+            /></a>
+          </li>
+        </ul>
+      </nav>
+      <aside class="console__sidebar">
+        <div class="logo"></div>
+        <ul class="sidebar-nav">
+          <li>
+            <nuxt-link to="/console/records">
+              <i class="material-icons">extension</i><span>Records</span>
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link to="/console/birth">
+              <i class="material-icons">how_to_reg</i><span>Birth</span>
+            </nuxt-link>
+          </li>
+          <li v-if="isLoggedIn">
+            <a href="#" @click="logOut">
+              <i class="material-icons">power_settings_new</i
+              ><span>Log out</span>
+            </a>
+          </li>
+        </ul>
+        <footer>
+          <p>Version: 0.1</p>
+          <p>Brought to you by Quru Tech Team</p>
+          <div class="social">
+            <a href="https://github.com/qurutech" class="github"></a>
+          </div>
+          <a href="https://qurutech.com" target="_blank">qurutech.com</a>
+        </footer>
+      </aside>
+      <main class="console__main">
+        <nuxt />
+      </main>
+      <footer class="console__footer"></footer>
+      <fab
+        v-if="isLoggedIn && isWhitelisted"
+        :position="position"
+        :bg-color="bgColor"
+        :actions="fabActions"
+        @birthRecord="openAddRecordModal"
+      />
+      <modal
+        name="addNewRecordModal"
+        :adaptive="true"
+        :draggable="true"
+        :scrollable="true"
+        height="auto"
+      >
+        <form class="add-new-record-form" @submit.enter.prevent="addNewRecord">
+          <div v-if="recordAdded" class="notification">
+            Record added with ID
+            <a
+              target="_blank"
+              class="notification__link"
+              :href="
+                `https://wavesexplorer.com/testnet/tx/${transaction.info.id}`
+              "
+              >{{ transaction.info.trace[0].result.data[0].key }}</a
+            >
+          </div>
+          <div class="form-group">
+            <input v-model="name" type="text" placeholder="Full name" />
+          </div>
+          <div class="form-group">
+            <input
+              v-model="dateOfBirth"
+              type="text"
+              placeholder="Date of birth e.g DD/MM/YYYY"
+            />
+          </div>
+          <div class="form-group">
+            <input
+              v-model="lga"
+              type="text"
+              placeholder="Local Government Area"
+            />
+          </div>
+          <div class="form-group">
+            <div class="radio">
+              <input
+                id="male"
+                v-model="sex"
+                type="radio"
+                value="male"
+                name="sex"
+              />
+              <label for="male">Male</label>
+              <div class="check"><div class="inside"></div></div>
+            </div>
+            <div class="radio">
+              <input
+                id="female"
+                v-model="sex"
+                type="radio"
+                value="female"
+                name="sex"
+              />
+              <label for="female">Female</label>
+              <div class="check"><div class="inside"></div></div>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="primary-button"
+            :disabled="isAddingRecord"
           >
-        </div>
-        <div class="form-group">
-          <input v-model="name" type="text" placeholder="Full name" />
-        </div>
-        <div class="form-group">
-          <input
-            v-model="dateOfBirth"
-            type="text"
-            placeholder="Date of birth e.g DD/MM/YYYY"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            v-model="lga"
-            type="text"
-            placeholder="Local Government Area"
-          />
-        </div>
-        <div class="form-group">
-          <div class="radio">
-            <input
-              id="male"
-              v-model="sex"
-              type="radio"
-              value="male"
-              name="sex"
-            />
-            <label for="male">Male</label>
-            <div class="check"><div class="inside"></div></div>
-          </div>
-          <div class="radio">
-            <input
-              id="female"
-              v-model="sex"
-              type="radio"
-              value="female"
-              name="sex"
-            />
-            <label for="female">Female</label>
-            <div class="check"><div class="inside"></div></div>
-          </div>
-        </div>
-        <button type="submit" class="primary-button" :disabled="isAddingRecord">
-          <i v-if="isAddingRecord" class="material-icons">watch_later</i>
-          <i v-else class="material-icons">add_circle</i>
-        </button>
-      </form>
-    </modal>
+            <i v-if="isAddingRecord" class="material-icons">watch_later</i>
+            <i v-else class="material-icons">add_circle</i>
+          </button>
+        </form>
+      </modal>
+    </div>
+    <div v-else class="mobile">
+      <h1>deREG is not available for mobile devices</h1>
+      <p>😞 Please use a desktop device</p>
+    </div>
   </div>
 </template>
 <script>
@@ -184,6 +205,17 @@ export default {
   },
   methods: {
     ...mapActions(['performWavesKeeperLogin', 'logOut']),
+    getIsMobileStatus() {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
     openAddRecordModal() {
       this.isAddingRecord = false
       this.$modal.show('addNewRecordModal')
@@ -258,7 +290,7 @@ export default {
 </script>
 <style>
 .console {
-  background-color: var(--primary-color);
+  background-color: var(--white-color);
   background-image: url('../assets/flat-mountain.svg');
   background-attachment: fixed;
   background-size: cover;
@@ -268,7 +300,7 @@ export default {
 
 nav {
   padding-top: 1rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 .nav-wrapper {
   display: flex;
@@ -279,11 +311,8 @@ nav {
 .nav-wrapper .nav-item {
   margin-right: 0.5em;
 }
-.nav-wrapper a {
-  color: #fff;
-}
 
-.logged-in {
+a.logged-in {
   display: flex;
   align-items: flex-end;
 }
@@ -293,15 +322,66 @@ nav {
 
 .console__sidebar {
   min-height: 100vh;
-  min-width: 15%;
-  background-color: var(--secondary-color);
+  min-width: 20%;
   position: fixed;
   left: 0;
   top: 0;
+  padding-top: 5em;
 }
 
+.console__sidebar .logo {
+  background-image: url('../assets/logo.png');
+  background-size: contain;
+  margin-left: 0.8em;
+  margin-bottom: 2.5em;
+  background-repeat: no-repeat;
+  height: 50px;
+}
+.console__sidebar footer {
+  padding: 0 1em;
+  position: absolute;
+  bottom: 5em;
+}
+.console__sidebar footer p,
+.console__sidebar footer a {
+  font-weight: 400;
+  font-size: 14px;
+  color: #9ba6b2;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  margin-bottom: 0.5em;
+}
+
+.console__sidebar footer a {
+  text-decoration: underline;
+}
+
+.console__sidebar .social {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+}
+
+.console__sidebar .social a {
+  width: 20px;
+  height: 20px;
+  background-position: center;
+  background-size: contain;
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: opacity 500ms;
+}
+
+.console__sidebar .social a:hover {
+  opacity: 1;
+}
+.console__sidebar .social a.github {
+  background-image: url('../assets/github.svg');
+}
 .sidebar-nav {
-  padding-top: 4em;
+  padding-top: 0.5em;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -336,25 +416,7 @@ nav {
   background-color: #fff;
   padding: 1em 2em;
   border-radius: 4px;
-  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.1);
-}
-
-.main-card__search {
-  border: none;
-  font-size: 2em;
-  color: var(--primary-color);
-  width: 100%;
-}
-.main-card__search:focus {
-  outline: none;
-  caret-color: var(--primary-color);
-}
-.main-card__search::placeholder {
-  color: rgba(255, 119, 0, 0.3);
-}
-.main-card__search::selection {
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.14);
 }
 
 .primary-button {
@@ -483,5 +545,47 @@ input[type='radio']:checked ~ label {
 
 .notification__link:hover {
   box-shadow: inset 0 -2rem 0 0 var(--primary-color);
+}
+
+.search-wrapper {
+  margin-bottom: 2em;
+  display: flex;
+  border-bottom: 1px solid var(--primary-color);
+  padding-bottom: 0.5em;
+}
+
+.search-box {
+  border: 0;
+  outline: none;
+  background-color: transparent;
+  margin-left: 0.3em;
+  font-size: 1.2em;
+  font-weight: 400;
+  font-stretch: normal;
+  width: 100%;
+}
+.search-box:focus {
+  outline: none;
+}
+.search-box::placeholder {
+  font-weight: 700;
+  font-size: 0.8em;
+}
+.search-box-focused {
+  color: var(--primary-color);
+}
+
+.mobile {
+  background-color: var(--white-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.mobile h1 {
+  font-size: 1em;
 }
 </style>

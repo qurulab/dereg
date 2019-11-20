@@ -61,6 +61,9 @@ export const mutations = {
   SET_SHOW_SIGNIN_SNACKBAR(state) {
     state.showSignInSnackbar = true
   },
+  RESET_SHOW_SIGNIN_SNACKBAR(state) {
+    state.showSignInSnackbar = false
+  },
   SET_RECORDS(state, data) {
     state.records = data // using spread operator
   },
@@ -160,6 +163,9 @@ export const actions = {
   },
   showSignInSnackbar(context) {
     context.commit('SET_SHOW_SIGNIN_SNACKBAR')
+  },
+  resetSignInSnackbar(context) {
+    context.commit('RESET_SHOW_SIGNIN_SNACKBAR')
   },
   getAllRecords(context) {
     if (context.state.recordsFetchingState === 'FETCHING') return

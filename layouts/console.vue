@@ -200,6 +200,7 @@ export default {
         this.$snack.success({
           text: 'Sign in with Keeper'
         })
+        this.$store.dispatch('resetSignInSnackbar')
       }
     }
   },

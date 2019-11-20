@@ -1,7 +1,16 @@
 <template>
   <div>
     <search-box @onSubmit="filterRecords" />
-    <section class="statistics" v-if="isWhitelisted">
+    <div class="refresh" v-if="isWhitelisted">
+      <button
+        class="refresh-btn"
+        :class="{ refreshing: recordsFetchingState == 'FETCHING' }"
+        @click="getAllRecords()"
+      >
+        <i class="material-icons">refresh</i>
+      </button>
+    </div>
+    <section v-if="isWhitelisted" class="statistics">
       <ul>
         <li>
           <h3>Population</h3>
@@ -230,5 +239,32 @@ export default {
   background-color: var(--white-color);
   padding: 1em 2em;
   border-radius: 4px;
+}
+
+.refresh {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5em;
+}
+.refresh-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.refresh-btn:focus {
+  outline: none;
+}
+
+.refreshing {
+  animation: rotate 1000ms infinite;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

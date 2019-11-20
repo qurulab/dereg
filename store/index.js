@@ -89,6 +89,7 @@ export const actions = {
         .then((data) => {
           context.commit('UPDATE_LOGIN_STATE', 'LOGGED_IN')
           context.commit('LOG_IN', data)
+          context.dispatch('getAllRecords')
           const publicState = JSON.stringify(data)
           context.dispatch('checkWhitelistStatus', data.publicKey)
 

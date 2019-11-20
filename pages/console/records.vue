@@ -65,7 +65,8 @@ export default {
       'records',
       'recordsFetchingState',
       'userStatus',
-      'searchQuery'
+      'searchQuery',
+      'loginState'
     ]),
     isWhitelisted() {
       let bool = false
@@ -103,7 +104,9 @@ export default {
     }
   },
   mounted() {
-    this.getAllRecords()
+    if (this.loginState === 'LOGGED_IN') {
+      this.getAllRecords()
+    }
   },
   methods: {
     ...mapActions(['getAllRecords', 'filterRecords']),

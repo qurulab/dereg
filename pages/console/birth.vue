@@ -262,7 +262,7 @@ export default {
 
 <style scoped>
 .record {
-  margin-top: 5rem;
+  margin-top: 2rem;
   border-bottom-right-radius: 20px;
 }
 .record-body {

@@ -36,10 +36,14 @@ export default {
   },
   methods: {
     searchBoxFocused() {
-      this.$refs.searchIcon.classList.add('search-box-focused')
+      if (this.$refs.searchIcon) {
+        this.$refs.searchIcon.classList.add('search-box-focused')
+      }
     },
     searchBoxLostFocused() {
-      this.$refs.searchIcon.classList.remove('search-box-focused')
+      if (this.$refs.searchIcon) {
+        this.$refs.searchIcon.classList.remove('search-box-focused')
+      }
     },
     performSearchAction() {
       this.$emit('onSubmit')

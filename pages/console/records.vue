@@ -1,7 +1,7 @@
 <template>
   <div>
     <search-box @onSubmit="filterRecords" />
-    <div class="refresh" v-if="isWhitelisted">
+    <div v-if="isWhitelisted" class="refresh">
       <button
         class="refresh-btn"
         :class="{ refreshing: recordsFetchingState == 'FETCHING' }"

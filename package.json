@@ -1,8 +1,8 @@
 {
-  "name": "awesome-dapp",
+  "name": "deREG",
   "version": "1.0.0",
-  "description": "My mind-blowing Nuxt.js project",
-  "author": "Kelvin Omereshone",
+  "description": "Open registry built on Waves Blockchain to manage birth, death and marriage records",
+  "author": "Auctionlance Platform",
   "private": true,
   "scripts": {
     "dev": "nuxt",

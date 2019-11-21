@@ -16,7 +16,9 @@
           <i class="material-icons edit-icon" @click="openEditModal">edit</i>
         </div>
         <div class="record-body">
-          <h1 class="name">{{ record.info.name | uppercase }}</h1>
+          <h1>Certificate OF BIRTH</h1>
+          <p>This certificate is proudly presented to</p>
+          <h3 class="name">{{ record.info.name | uppercase }}</h3>
           <p class="date-of-birth">{{ record.info.dateOfBirth }}</p>
           <p class="sex">{{ record.info.sex | uppercase }}</p>
           <p class="lga">{{ record.info.lga | capitalize }}</p>
@@ -233,13 +235,11 @@ export default {
             const result = {
               info: JSON.parse(data)
             }
-            console.log(result.info)
             this.transaction = result
             this.$modal.hide('editRecordModal')
             this.$router.push({ path: '/console/records' })
           })
-          .catch((error) => {
-            console.log(error)
+          .catch((_) => {
             this.$snack.success({
               text:
                 '😰 Oops this is embarrasing something went wrong. Try again'
@@ -263,25 +263,31 @@ export default {
 <style scoped>
 .record {
   margin-top: 2rem;
-  border-bottom-right-radius: 20px;
+  border: 1px dashed #ddd;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px #ddd, 0 0 0 10px #fff, 0 0 2px 10px #eee;
 }
 .record-body {
   padding: 3em;
   display: grid;
   grid-template-rows: repeat(1fr, 3);
-  grid-row-gap: 2em;
+  grid-row-gap: 1em;
   text-align: center;
 }
 
+h1 {
+  text-transform: uppercase;
+}
 .name {
   letter-spacing: 2px;
   color: var(--primary-color);
+  font-size: 4rem;
 }
 
 .sex,
 .date-of-birth {
   font-weight: 700;
   font-size: 1.5em;
+  color: rgb(104, 100, 100);
 }
 .record-footer {
   margin-top: 2rem;

@@ -12,7 +12,8 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || ''
+        content:
+          'Open registry built on Waves Blockchain to manage birth, death and marriage records'
       }
     ],
     link: [

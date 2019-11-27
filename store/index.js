@@ -80,8 +80,8 @@ export const actions = {
     context.commit('RESET_LOGIN_STATE')
     context.commit('UPDATE_LOGIN_STATE', 'LOGGING_IN')
     const authData = {
-      data: 'Awesome dApp',
-      name: 'Awesome dApp',
+      data: 'deREG Auth',
+      name: 'deREG',
       icon: 'http://auctionlance.com/aucttoken.svg',
       referrer: '/console',
       successPath: '/console'
@@ -93,10 +93,9 @@ export const actions = {
           context.commit('UPDATE_LOGIN_STATE', 'LOGGED_IN')
           context.commit('LOG_IN', data)
           context.dispatch('getAllRecords')
-          const publicState = JSON.stringify(data)
           context.dispatch('checkWhitelistStatus', data.publicKey)
-
           // Storing data to local Storage for better UX and persistence
+          const publicState = JSON.stringify(data)
           localStorage.setItem('wavesKeeperData', publicState)
           localStorage.setItem('isLoggedIn', true)
         })

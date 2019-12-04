@@ -15,10 +15,9 @@ Example of this user level in real life is NIMC.
 3. Third Level Users: These are the end users whose records are added, searched, updated and printed on the dApp.
 
 ###### How does it work?
-After a successful deployment of the dApp,
-- Visit the dApp URL via https://dereg.auctionlance.com
-- Click on the SIGN IN button at the top right of the page.
-- Put your Waves address and get free TestNet 10 Waves to test the dApp
+- [x] Visit the dApp URL via https://dereg.auctionlance.com
+- [x] Click on the SIGN IN button at the top right of the page.
+- [x] Put your Waves address and get free TestNet 10 Waves to test the dApp
 
 
 

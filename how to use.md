@@ -22,7 +22,7 @@ Example of this user level in real life is NIMC.
 - [x] Click on the SIGN IN button at the top right of the page.
 - [x] Add, Update and Search Records
 
-> Interested to add, update or search rcords to the dApp? Send a pull request for us to Whitelist your public key below
+> Interested to add, update or search rcords to the dApp? Send a pull request for us to Whitelist your public key below or reach out to us via [Telegram group](https://t.me/auctionlance)
 
 ## Whitelisted Addresses That Create Records (TestNet):
 - A2MwvUwGVwEgAHPJ6NKwLQasFXRqLNwDxcJvnnVH1u99

@@ -20,9 +20,8 @@ Example of this user level in real life is NIMC.
 - [x] Click on the SIGN IN button at the top right of the page.
 - [x] Add, Update and Search Records
 
-###### Interested to add, update or search rcords to the dApp?
-Send a pull request for us to Whitelist your public key here
+> Interested to add, update or search rcords to the dApp? Send a pull request for us to Whitelist your public key below
 
-## Whitelisted Address:
+## Whitelisted Addresses That Create Records (TestNet):
 - A2MwvUwGVwEgAHPJ6NKwLQasFXRqLNwDxcJvnnVH1u99
-
+- 2YAJaDsodK8rCbPb7Mf6LUWVBwT5tWZavq3122axqGpW

@@ -2,17 +2,17 @@
 deREG is a dApp coded in RIDE (Smart contract programming language on Waves blockchain), it is used to manage birth record. The dApp is able to save, update and retrieve birth records.
 
 ###### There 3 user levels on the dApp:
-1. First Level User: This is the principal dApp account and access to deploy the smart contract on the blockchain. This user holds the private key of the account that is used to deploy the dApp. This account can add, update, search and print records on the dApp.
+- First Level User: This is the principal dApp account and access to deploy the smart contract on the blockchain. This user holds the private key of the account that is used to deploy the dApp. This account can add, update, search and print records on the dApp.
 Example of this user level in real life is NIMC.
 
-2. Second Level User: This refers to middle layer users whose accounts are first authorized and endorsed by First Level User before they can add, update, search and print records on the dApp. Example of this user level in real life is Hospitals.
+- Second Level User: This refers to middle layer users whose accounts are first authorized and endorsed by First Level User before they can add, update, search and print records on the dApp. Example of this user level in real life is Hospitals.
 
-3. Third Level Users: These are the end users whose records are added, searched, updated and printed on the dApp.
+- Third Level Users: These are the end users whose records are added, searched, updated and printed on the dApp.
 
 ###### How to get free Waves to Test dApp
 - Install Waves keeper (it's just like meta mask) browser extension on your browser (Available in Chrome, Firefox, Edge and Opera and Brave)
 - Switch your network to TestNet (This enables you to test the dApp without spending real money)
-- Copy your Waves wallet address from the Waves keeper and goto Waves Faucet to get free TestNet Waves via here [Thus Link](wavesexplorer.com/testnet/faucet)
+- Copy your Waves wallet address from the Waves keeper and goto Waves Faucet to get free TestNet Waves via here [This Link](wavesexplorer.com/testnet/faucet)
 - Put your Waves address and get free TestNet 10 Waves to test the dApp
 
 ###### How does it work?
@@ -20,6 +20,9 @@ Example of this user level in real life is NIMC.
 - [x] Click on the SIGN IN button at the top right of the page.
 - [x] Add, Update and Search Records
 
+###### Interested to add, update or search rcords to the dApp?
+Send a pull request for us to Whitelist your public key here
 
-
+## Whitelisted Address:
+- A2MwvUwGVwEgAHPJ6NKwLQasFXRqLNwDxcJvnnVH1u99
 

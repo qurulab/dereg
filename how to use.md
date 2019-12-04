@@ -1,6 +1,8 @@
 > Hi friends, here is a brief description of how this dApp works.
 deREG is a dApp coded in RIDE (Smart contract programming language on Waves blockchain), it is used to manage birth record. The dApp is able to save, update and retrieve birth records.
 
+> If you need any help, reach out to us via [Telegram group](https://t.me/auctionlance) and we would be glad to help in every way
+
 ###### There 3 user levels on the dApp:
 - First Level User: This is the principal dApp account and access to deploy the smart contract on the blockchain. This user holds the private key of the account that is used to deploy the dApp. This account can add, update, search and print records on the dApp.
 Example of this user level in real life is NIMC.
